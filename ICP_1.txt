@@ -1,5 +1,5 @@
 1. Make Directory in Hadoop File System using "-mkdir":
-          hdfs dfs -mkdir /hadoop_files/
+          hdfs dfs -mkdir /files/
 
 2. upload both files to HDFS using the command " -copyFromLocal":
          hdfs dfs -copyFromLocal /home/cloudera/ICP1/shakespeare.txt  /files/
