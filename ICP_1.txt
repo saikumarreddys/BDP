@@ -6,5 +6,5 @@
          hdfs dfs -copyFromLocal /home/cloudera/ICP1/word_list.txt /files/
 
 3.concat both files using the "-cat" command and put it into HDFS using "-put":
-	hdfs dfs -appendToFile /hadoop_files/shakespeare.txt /hadoop_files/word_list.txt
+	hdfs dfs -appendToFile /files/shakespeare.txt /files/word_list.txt
                
