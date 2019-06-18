@@ -1,0 +1,84 @@
+Use Case1:
+
+SQL to HDFS:
+1.Creating a table acad in mysql
+
+create table acad(empid int,empname varchar(50));
+insert into acad values(5,'sanam');
+insert into acad values(6,'OPRA');
+insert into acad values(7,'Yella');
+select * from acad;
+
+2.
+sqoop import --connect jdbc:mysql://localhost/bdppractice --username root --password cloudera --table acad --m 1;
+
+HDFS to SQL:
+
+1.sqoop export --connect:mysql://localhost --username root --password cloudera --table export --export-dir acad/part-m-00000 --m 1;
+
+2.create table export(ID INT,Name varchar(50));
+
+select * from export;
+
+
+
+
+Use Case 2:
+
+HIVE TO SQL:
+1.Create table in HIVE.
+create table emp1(ID int, Name string) partitioned by(',');
+
+2.Load data into hive table.
+load local inpath '/user/cloudera/input.txt' into table emp1;
+
+3.sqoop export --connect  jdbc:mysql://localhost/bdppractice --username root --password cloudera --table EMP1  --export-dir /user/hive/warehouse/emp1 -m 1; 
+
+SQL TO HDFS TO HIVE:
+
+1.Sqoop command:
+
+sqoop import --connect  jdbc:mysql://localhost/bdppractice --username root --password cloudera --table sample  --target-dir /hive/result.txt --hive-import --create-hive-table --hive-table default.SAMP -m 1; 
+
+
+
+Use Case 3:
+
+WordCount:
+
+DELIMITER $$
+ CREATE FUNCTION wordcount(str TEXT)
+            RETURNS INT
+            DETERMINISTIC
+            SQL SECURITY INVOKER
+            NO SQL
+       BEGIN
+         DECLARE wordCnt, idx, maxIdx INT DEFAULT 0;
+         DECLARE currChar, prevChar BOOL DEFAULT 0;
+         SET maxIdx=char_length(str);
+         WHILE idx < maxIdx DO
+             SET currChar=SUBSTRING(str, idx, 1) RLIKE '[[:alnum:]]';
+             IF NOT prevChar AND currChar THEN
+                 SET wordCnt=wordCnt+1;
+             END IF;
+             SET prevChar=currChar;
+             SET idx=idx+1;
+         END WHILE;
+         RETURN wordCnt;
+       END
+     $$
+
+PatternIdentifier:
+
+sqoop import --connect jdbc:mysql://localhost/bdppractice --username root --password cloudera --query "SELECT *  FROM employees WHERE All_lines  LIKE '%HEN%' AND  \$CONDITIONS" --m 1  --target-dir /patternidentifier/patternidentifier.txt --hive-import --create-hive-table --hive-table default.pattern -m 1:
+
+
+
+Statistics:
+
+hive> analyze table employees compute statistics;
+
+
+
+
+
